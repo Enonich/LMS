@@ -14,7 +14,7 @@ from pathlib import Path
 
 from src.core.config import settings
 from src.core.database import db
-from src.api import auth, materials, quiz, progress
+from src.api import auth, materials, quiz, progress, admin
 
 # Initialize scheduler
 scheduler = AsyncIOScheduler()
@@ -53,6 +53,12 @@ app.include_router(auth.router, prefix="/api/auth")
 app.include_router(materials.router, prefix="/api/materials")
 app.include_router(quiz.router, prefix="/api/questions")
 app.include_router(progress.router, prefix="/api/progress")
+app.include_router(admin.router, prefix="/api/admin")
+
+# Ensure required directories exist
+Path("frontend-react/dist/assets").mkdir(parents=True, exist_ok=True)
+Path("frontend-react/dist/static").mkdir(parents=True, exist_ok=True)
+Path("uploads").mkdir(parents=True, exist_ok=True)
 
 # Serve static assets (React frontend build) and uploaded files
 app.mount("/assets", StaticFiles(directory="frontend-react/dist/assets"), name="assets")
