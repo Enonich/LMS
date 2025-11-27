@@ -9,9 +9,11 @@ import MaterialsPage from './pages/MaterialsPage';
 import QuizPage from './pages/QuizPage';
 import ProgressPage from './pages/ProgressPage';
 import SchedulePage from './pages/SchedulePage';
+import AdminPage from './pages/AdminPage';
 
 function PrivateRoute({ children }) {
-  const { token } = useAuth();
+  const { token, loading } = useAuth();
+  if (loading) return null; // Show nothing while checking authentication
   if (!token) return <Navigate to="/login" replace />;
   return children;
 }
@@ -31,6 +33,7 @@ export default function App() {
                 <Route path="quiz" element={<QuizPage />} />
                 <Route path="progress" element={<ProgressPage />} />
                 <Route path="schedule" element={<SchedulePage />} />
+                <Route path="admin" element={<AdminPage />} />
                 <Route index element={<Navigate to="/dashboard" replace />} />
               </Routes>
             </DashboardLayout>

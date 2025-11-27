@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const API_BASE = `${window.location.origin}/api`;
 
 export default function DashboardPage() {
   const { token, user } = useAuth();
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     enrolledCount: 0,
     quizAccuracy: '0%',
     streak: 0
   });
-  const [recentMaterials, setRecentMaterials] = useState([]);
+  const [enrolledMaterials, setEnrolledMaterials] = useState([]);
+  const [availableMaterials, setAvailableMaterials] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,13 +26,25 @@ export default function DashboardPage() {
   async function loadDashboardData() {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_BASE}/materials/enrolled`, {
+      // Load enrolled materials
+      const enrolledRes = await axios.get(`${API_BASE}/materials/enrolled`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      const enrolled = enrolledRes.data;
+      setEnrolledMaterials(enrolled);
+      setStats(prev => ({ ...prev, enrolledCount: enrolled.length }));
+
+      // Load available materials (from user's department)
+      const availableRes = await axios.get(`${API_BASE}/materials?department=${user?.department || ''}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const available = availableRes.data;
       
-      const materials = res.data;
-      setRecentMaterials(materials.slice(0, 4));
-      setStats(prev => ({ ...prev, enrolledCount: materials.length }));
+      // Filter out already enrolled materials
+      const unenrolled = available.filter(material => 
+        !enrolled.some(enrolledMaterial => enrolledMaterial.id === material.id)
+      );
+      setAvailableMaterials(unenrolled.slice(0, 4)); // Show only first 4
 
       // Load quiz stats from localStorage
       if (user) {
@@ -55,16 +70,63 @@ export default function DashboardPage() {
     }
   }
 
-  function openMaterial(material) {
-    window.location.hash = `#materials?view=${material.id}`;
+  async function enrollInMaterial(materialId) {
+    try {
+      await axios.put(`${API_BASE}/materials/${materialId}/enroll`, null, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      // Refresh data after enrollment
+      loadDashboardData();
+      alert('Successfully enrolled in the course!');
+    } catch (error) {
+      console.error('Error enrolling:', error);
+      alert('Failed to enroll in the course. Please try again.');
+    }
+  }
+
+  function viewMaterial(material) {
+    // Navigate to materials page with the selected material
+    navigate('/materials', { state: { selectedMaterial: material } });
   }
 
   return (
-    <div style={{ background:'#ffffff', borderRadius:'20px', padding:'2rem', boxShadow:'0 4px 20px rgba(0,0,0,0.08)', minHeight:'calc(100vh - 4rem)' }}>
+    <div style={{ 
+      background:'rgba(255,255,255,0.85)', 
+      backdropFilter:'blur(30px) saturate(180%)',
+      borderRadius:'24px', 
+      padding:'2.5rem', 
+      boxShadow:'0 10px 40px rgba(0,0,0,0.12), 0 0 60px rgba(102,126,234,0.08), inset 0 0 0 1px rgba(255,255,255,0.3)', 
+      minHeight:'calc(100vh - 4rem)',
+      border:'1px solid rgba(255,255,255,0.3)',
+      animation:'fadeIn 0.6s ease'
+    }}>
       <div style={styles.header}>
         <div style={{ flex: 1 }}>
-          <h2 style={styles.title}>📊 Learners Dashboard</h2>
-          <p style={styles.subtitle}>Welcome back, {user?.full_name || 'Student'}!</p>
+          <div style={styles.titleContainer}>
+            <div style={styles.titleIcon}>
+              <i className="fas fa-graduation-cap" style={{ fontSize: '1.8rem', color: '#667eea' }}></i>
+            </div>
+            <div>
+              <h1 style={styles.title}>Learning Dashboard</h1>
+              <p style={styles.subtitle}>Welcome back, {user?.full_name || 'Student'}!</p>
+            </div>
+          </div>
+          <div style={styles.welcomeMessage}>
+            <p style={styles.welcomeText}>
+              Continue your learning journey and track your progress across all enrolled courses.
+            </p>
+          </div>
+        </div>
+        <div style={styles.headerActions}>
+          <div style={styles.currentDate}>
+            <i className="fas fa-calendar-alt" style={{ marginRight: '0.5rem', color: '#718096' }}></i>
+            {new Date().toLocaleDateString('en-US', { 
+              weekday: 'long', 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            })}
+          </div>
         </div>
       </div>
 
@@ -106,64 +168,115 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div style={styles.tableCard}>
-            <div style={styles.tableHeader}>
-              <h3 style={styles.tableTitle}>Recent Courses</h3>
+          {/* Enrolled Courses Section */}
+          <div style={styles.sectionCard}>
+            <div style={styles.sectionHeader}>
+              <h3 style={styles.sectionTitle}>
+                <i className="fas fa-bookmark" style={{ marginRight: '0.5rem', color: '#38a169' }}></i>
+                My Enrolled Courses ({enrolledMaterials.length})
+              </h3>
               <button 
                 style={styles.viewAllBtn}
-                onClick={() => window.location.hash = '#materials'}
+                onClick={() => navigate('/progress')}
               >
-                View All <i className="fas fa-arrow-right" style={{ marginLeft: '0.5rem' }}></i>
+                View Progress <i className="fas fa-arrow-right" style={{ marginLeft: '0.5rem' }}></i>
               </button>
             </div>
 
-            {recentMaterials.length === 0 ? (
+            {enrolledMaterials.length === 0 ? (
               <div style={styles.emptyState}>
                 <i className="fas fa-inbox" style={{ fontSize: '3rem', color: '#cbd5e0', marginBottom: '1rem' }}></i>
                 <p style={{ color: '#718096', marginBottom: '1rem' }}>No courses enrolled yet</p>
                 <button 
                   style={styles.enrollBtn}
-                  onClick={() => window.location.hash = '#materials'}
+                  onClick={() => navigate('/materials')}
                 >
                   <i className="fas fa-plus" style={{ marginRight: '0.5rem' }}></i>
                   Browse Courses
                 </button>
               </div>
             ) : (
-              <div style={styles.table}>
-                <div style={styles.tableHeaderRow}>
-                  <span>Course Name</span>
-                  <span>Department</span>
-                  <span>Status</span>
-                  <span>Action</span>
-                </div>
-                {recentMaterials.map(material => (
-                  <div key={material.id} style={styles.tableRow}>
-                    <span style={styles.courseName}>
-                      <i className={`fas fa-${getMaterialIcon(material.content_type)}`} 
-                         style={{ marginRight: '0.75rem', color: '#667eea' }}></i>
-                      {material.title}
-                    </span>
-                    <span style={styles.department}>{material.department}</span>
-                    <span>
-                      {material.file_exists === false ? (
-                        <span style={styles.badgeError}>Missing</span>
-                      ) : (
-                        <span style={styles.badgeActive}>Active</span>
-                      )}
-                    </span>
+              <div style={styles.materialsGrid}>
+                {enrolledMaterials.slice(0, 4).map(material => (
+                  <div key={material.id} style={styles.materialCard}>
+                    <div style={styles.materialHeader}>
+                      <div style={styles.materialIcon}>
+                        <i className={`fas fa-${getMaterialIcon(material.content_type)}`} 
+                           style={{ color: '#38a169', fontSize: '1.2rem' }}></i>
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <h4 style={styles.materialTitle}>{material.title}</h4>
+                        <div style={styles.materialMeta}>
+                          <span>{material.department}</span>
+                          <span>�</span>
+                          <span>{material.content_type}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <p style={styles.materialDescription}>
+                      {material.description || 'No description available'}
+                    </p>
                     <button 
-                      style={styles.actionBtn}
-                      onClick={() => openMaterial(material)}
+                      style={styles.viewBtn}
+                      onClick={() => viewMaterial(material)}
                     >
-                      <i className="fas fa-eye" style={{ marginRight: '0.5rem' }}></i>
-                      View
+                      <i className="fas fa-play" style={{ marginRight: '0.5rem' }}></i>
+                      Continue Learning
                     </button>
                   </div>
                 ))}
               </div>
             )}
           </div>
+
+          {/* Available Courses Section */}
+          {availableMaterials.length > 0 && (
+            <div style={styles.sectionCard}>
+              <div style={styles.sectionHeader}>
+                <h3 style={styles.sectionTitle}>
+                  <i className="fas fa-compass" style={{ marginRight: '0.5rem', color: '#667eea' }}></i>
+                  Available Courses ({availableMaterials.length})
+                </h3>
+                <button 
+                  style={styles.viewAllBtn}
+                  onClick={() => navigate('/materials')}
+                >
+                  View All <i className="fas fa-arrow-right" style={{ marginLeft: '0.5rem' }}></i>
+                </button>
+              </div>
+
+              <div style={styles.materialsGrid}>
+                {availableMaterials.map(material => (
+                  <div key={material.id} style={styles.materialCard}>
+                    <div style={styles.materialHeader}>
+                      <div style={styles.materialIcon}>
+                        <i className={`fas fa-${getMaterialIcon(material.content_type)}`} 
+                           style={{ color: '#667eea', fontSize: '1.2rem' }}></i>
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <h4 style={styles.materialTitle}>{material.title}</h4>
+                        <div style={styles.materialMeta}>
+                          <span>{material.department}</span>
+                          <span>�</span>
+                          <span>{material.content_type}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <p style={styles.materialDescription}>
+                      {material.description || 'No description available'}
+                    </p>
+                    <button 
+                      style={styles.enrollBtnSmall}
+                      onClick={() => enrollInMaterial(material.id)}
+                    >
+                      <i className="fas fa-user-plus" style={{ marginRight: '0.5rem' }}></i>
+                      Enroll
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>
@@ -186,19 +299,72 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: '2rem',
-    gap: '1rem'
+    marginBottom: '2.5rem',
+    gap: '2rem',
+    paddingBottom: '2rem',
+    borderBottom: '2px solid #f1f5f9'
+  },
+  titleContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
+    marginBottom: '0.75rem'
+  },
+  titleIcon: {
+    width: '70px',
+    height: '70px',
+    borderRadius: '20px',
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 8px 20px rgba(102,126,234,0.4), 0 0 40px rgba(118,75,162,0.2), inset 0 2px 4px rgba(255,255,255,0.2)',
+    flexShrink: 0,
+    animation: 'float 3s ease-in-out infinite',
+    border: '2px solid rgba(255,255,255,0.2)'
   },
   title: {
-    fontSize: '1.9rem',
-    fontWeight: 700,
+    fontSize: '2.5rem',
+    fontWeight: 900,
     margin: 0,
-    color: '#1f2937'
+    color: '#1f2937',
+    letterSpacing: '-0.03em',
+    lineHeight: 1.1,
+    textShadow: '0 2px 10px rgba(0,0,0,0.05)'
   },
   subtitle: {
+    fontSize: '1.15rem',
+    color: '#64748b',
+    margin: '0.5rem 0 0',
+    fontWeight: 500,
+    letterSpacing: '-0.01em'
+  },
+  welcomeMessage: {
+    marginTop: '0.5rem'
+  },
+  welcomeText: {
     fontSize: '0.95rem',
-    color: '#718096',
-    margin: '0.5rem 0 0'
+    color: '#64748b',
+    margin: 0,
+    lineHeight: 1.5,
+    maxWidth: '600px'
+  },
+  headerActions: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    gap: '1rem'
+  },
+  currentDate: {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '0.9rem',
+    color: '#64748b',
+    fontWeight: 500,
+    background: '#f8fafc',
+    padding: '0.75rem 1rem',
+    borderRadius: '12px',
+    border: '1px solid #e2e8f0'
   },
   statsGrid: {
     display: 'grid',
@@ -207,37 +373,49 @@ const styles = {
     marginBottom: '2rem'
   },
   statCard: {
-    background: 'linear-gradient(135deg, #ffffff 0%, #f7fafc 100%)',
-    padding: '1.5rem',
-    borderRadius: '16px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-    border: '1px solid #e5e7eb',
+    background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(247,250,252,0.95) 100%)',
+    backdropFilter: 'blur(20px)',
+    padding: '1.75rem',
+    borderRadius: '20px',
+    boxShadow: '0 4px 16px rgba(0,0,0,0.08), 0 0 40px rgba(102,126,234,0.05)',
+    border: '1px solid rgba(229,231,235,0.6)',
     display: 'flex',
     alignItems: 'center',
-    gap: '1.25rem',
-    transition: 'all 0.3s',
-    cursor: 'default'
+    gap: '1.5rem',
+    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    cursor: 'default',
+    position: 'relative',
+    overflow: 'hidden'
   },
   statIcon: {
-    width: '64px',
-    height: '64px',
-    borderRadius: '16px',
-    background: 'linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%)',
+    width: '72px',
+    height: '72px',
+    borderRadius: '18px',
+    background: 'linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%)',
+    backdropFilter: 'blur(10px)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    flexShrink: 0
+    flexShrink: 0,
+    boxShadow: '0 4px 12px rgba(102,126,234,0.15)',
+    transition: 'all 0.3s ease'
   },
   statValue: {
-    fontSize: '2rem',
-    fontWeight: 700,
-    color: '#1f2937',
-    lineHeight: 1
+    fontSize: '2.25rem',
+    fontWeight: 800,
+    background: 'linear-gradient(135deg, #1f2937 0%, #4a5568 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    lineHeight: 1,
+    letterSpacing: '-0.02em'
   },
   statLabel: {
-    fontSize: '0.875rem',
+    fontSize: '0.925rem',
     color: '#718096',
-    marginTop: '0.5rem'
+    marginTop: '0.5rem',
+    fontWeight: 500,
+    letterSpacing: '0.01em'
   },
   tableCard: {
     background: '#ffffff',
@@ -363,5 +541,127 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     padding: '4rem 2rem'
+  },
+  sectionCard: {
+    background: 'rgba(255,255,255,0.9)',
+    backdropFilter: 'blur(20px)',
+    borderRadius: '20px',
+    boxShadow: '0 4px 16px rgba(0,0,0,0.08), 0 0 40px rgba(102,126,234,0.05)',
+    border: '1px solid rgba(229,231,235,0.6)',
+    marginBottom: '2rem',
+    overflow: 'hidden',
+    transition: 'all 0.3s ease'
+  },
+  sectionHeader: {
+    padding: '1.5rem',
+    borderBottom: '1px solid #e5e7eb',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  sectionTitle: {
+    margin: 0,
+    fontSize: '1.25rem',
+    fontWeight: 600,
+    color: '#1f2937',
+    display: 'flex',
+    alignItems: 'center'
+  },
+  materialsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+    gap: '1rem',
+    padding: '1.5rem'
+  },
+  materialCard: {
+    background: 'rgba(255,255,255,0.95)',
+    backdropFilter: 'blur(10px)',
+    border: '1px solid rgba(229,231,235,0.6)',
+    borderRadius: '16px',
+    padding: '1.5rem',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    cursor: 'pointer',
+    position: 'relative',
+    overflow: 'hidden'
+  },
+  materialHeader: {
+    display: 'flex',
+    gap: '0.75rem',
+    marginBottom: '0.75rem',
+    alignItems: 'flex-start'
+  },
+  materialIcon: {
+    width: '48px',
+    height: '48px',
+    borderRadius: '14px',
+    background: 'linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1))',
+    backdropFilter: 'blur(10px)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    boxShadow: '0 2px 8px rgba(102,126,234,0.1)',
+    transition: 'all 0.3s ease'
+  },
+  materialTitle: {
+    margin: '0 0 0.25rem',
+    fontSize: '1rem',
+    fontWeight: 600,
+    color: '#2d3748',
+    lineHeight: 1.3
+  },
+  materialMeta: {
+    fontSize: '0.75rem',
+    color: '#718096',
+    display: 'flex',
+    gap: '0.5rem',
+    alignItems: 'center'
+  },
+  materialDescription: {
+    fontSize: '0.8rem',
+    color: '#4a5568',
+    lineHeight: 1.5,
+    marginBottom: '1rem',
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden'
+  },
+  viewBtn: {
+    background: 'linear-gradient(135deg, #38a169 0%, #2f855a 100%)',
+    color: '#ffffff',
+    border: 'none',
+    padding: '0.625rem 1.25rem',
+    borderRadius: '12px',
+    fontSize: '0.9rem',
+    fontWeight: 700,
+    cursor: 'pointer',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    fontFamily: 'inherit',
+    display: 'inline-flex',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: 'center',
+    boxShadow: '0 4px 12px rgba(56,161,105,0.3)',
+    letterSpacing: '0.02em'
+  },
+  enrollBtnSmall: {
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    color: '#ffffff',
+    border: 'none',
+    padding: '0.625rem 1.25rem',
+    borderRadius: '12px',
+    fontSize: '0.9rem',
+    fontWeight: 700,
+    cursor: 'pointer',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    fontFamily: 'inherit',
+    display: 'inline-flex',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: 'center',
+    boxShadow: '0 4px 12px rgba(102,126,234,0.3)',
+    letterSpacing: '0.02em'
   }
 };

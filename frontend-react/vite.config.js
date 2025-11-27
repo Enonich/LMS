@@ -19,6 +19,21 @@ export default defineConfig({
       }
     }
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // UI libraries
+          'ui-vendor': ['axios'],
+          // Video.js
+          'video-vendor': ['video.js'],
+          // PDF.js
+          'pdf-vendor': ['pdfjs-dist']
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000 // Increase warning limit to 1000kb
+  },
   server: {
     port: 5173,
     proxy: {

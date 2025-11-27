@@ -1,7 +1,69 @@
-/* Animations */
+/* Global Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+/* Modern Body Background with Animated Gradient Overlay */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Alternative: If you want to keep the image background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/static/li.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  opacity: 0.15;
+  z-index: -2;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.85) 50%, rgba(240, 147, 251, 0.9) 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  z-index: -1;
+}
+
+/* Enhanced Animations */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { 
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideUp {
@@ -37,77 +99,206 @@
   }
 }
 
-/* Smooth scrolling */
-* {
-  scroll-behavior: smooth;
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
-/* Custom scrollbar */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(102, 126, 234, 0.8), 0 0 40px rgba(118, 75, 162, 0.6);
+  }
+}
+
+/* Modern Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: rgba(241, 241, 241, 0.5);
+  backdrop-filter: blur(10px);
   border-radius: 10px;
+  margin: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, #667eea, #764ba2);
   border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #5568d3, #653a8b);
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
 }
 
-/* Card hover effects */
+/* Firefox Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #667eea rgba(241, 241, 241, 0.5);
+}
+
+/* Enhanced Card Hover Effects */
+.card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
-  border-color: #cbd5e0 !important;
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2), 0 0 20px rgba(118, 75, 162, 0.1) !important;
+  border-color: #667eea !important;
+}
+
+.card:hover::before {
+  left: 100%;
 }
 
 .card:hover .card-icon {
-  transform: scale(1.1);
+  transform: scale(1.15) rotate(5deg);
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
 }
 
 .card:hover .card-icon i {
   color: #ffffff !important;
+  animation: float 2s ease-in-out infinite;
 }
 
-/* Button hover effects */
+/* Modern Button Effects */
+button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+button > * {
+  position: relative;
+  z-index: 2;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
 button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3), 0 0 15px rgba(118, 75, 162, 0.2);
 }
 
 button:active:not(:disabled) {
-  transform: translateY(0);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(102, 126, 234, 0.2);
 }
 
-/* Input focus effects */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(0.3);
+}
+
+/* Modern Input Focus Effects */
+input, textarea, select {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 input:focus, textarea:focus, select:focus {
   border-color: #667eea !important;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15) !important;
+  transform: translateY(-2px);
+  outline: none;
 }
 
-/* PDF Viewer Styles */
+input:hover, textarea:hover, select:hover {
+  border-color: #a0aec0 !important;
+}
+
+/* Placeholder Styling */
+::placeholder {
+  color: #a0aec0;
+  opacity: 1;
+}
+
+input:focus::placeholder,
+textarea:focus::placeholder {
+  opacity: 0.5;
+  transform: translateX(5px);
+  transition: all 0.3s ease;
+}
+
+/* Modern PDF Viewer Styles */
 .pdf-toolbar {
   display: flex;
   gap: 0.5rem;
   align-items: center;
-  background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+  background: linear-gradient(135deg, rgba(45, 55, 72, 0.95) 0%, rgba(26, 32, 44, 0.98) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
   color: #f7fafc;
   padding: 0.75rem 1rem;
-  border-radius: 12px;
+  border-radius: 16px;
   flex-wrap: wrap;
   position: relative;
   z-index: 10;
   font-family: Inter, system-ui, sans-serif;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .pdf-toolbar.fullscreen {
@@ -120,29 +311,55 @@ input:focus, textarea:focus, select:focus {
 }
 
 .pdf-toolbar button {
-  background: #4a5568;
+  background: rgba(74, 85, 104, 0.8);
+  backdrop-filter: blur(10px);
   color: #fff;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 0.5rem 0.75rem;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: inherit;
+  position: relative;
+  z-index: 1;
+}
+
+.pdf-toolbar button > * {
+  position: relative;
+  z-index: 2;
+}
+
+.pdf-toolbar button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .pdf-toolbar button:hover:not(:disabled) {
-  background: #667eea;
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.pdf-toolbar button:hover:not(:disabled)::after {
+  opacity: 1;
 }
 
 .pdf-toolbar button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+  filter: grayscale(0.5);
 }
 
 .pdf-toolbar input[type=number] {
@@ -177,14 +394,16 @@ input:focus, textarea:focus, select:focus {
 }
 
 .pdf-canvas-wrap {
-  background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+  background: linear-gradient(135deg, rgba(26, 32, 44, 0.95) 0%, rgba(45, 55, 72, 0.95) 100%);
+  backdrop-filter: blur(20px);
   margin-top: 0.75rem;
   max-height: 75vh;
   overflow: auto;
-  border-radius: 12px;
-  padding: 1rem;
-  transition: all 0.3s;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 1px rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .pdf-canvas-wrap.fullscreen {
@@ -202,6 +421,200 @@ input:focus, textarea:focus, select:focus {
 .pdf-canvas-wrap canvas {
   display: block;
   margin: 0 auto;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  border-radius: 4px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(102, 126, 234, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.pdf-canvas-wrap canvas:hover {
+  transform: scale(1.01);
+}
+
+/* Modern Video.js Custom Styles */
+.video-js {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(102, 126, 234, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.video-js .vjs-control-bar {
+  background: linear-gradient(135deg, rgba(45, 55, 72, 0.98) 0%, rgba(26, 32, 44, 0.98) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 0 0 16px 16px;
+  padding: 0 1rem;
+  height: 3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.video-js .vjs-big-play-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  width: 5rem;
+  height: 5rem;
+  font-size: 2.5rem;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5), 0 0 40px rgba(118, 75, 162, 0.3);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.video-js .vjs-big-play-button:hover {
+  transform: scale(1.15) rotate(5deg);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.7), 0 0 60px rgba(118, 75, 162, 0.5);
+  animation: none;
+}
+
+.video-js .vjs-control {
+  color: #f7fafc;
+  transition: all 0.2s;
+}
+
+.video-js .vjs-control:hover {
+  color: #667eea;
+}
+
+.video-js .vjs-play-control,
+.video-js .vjs-pause-control {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.video-js .vjs-volume-panel {
+  margin-left: 0.5rem;
+}
+
+.video-js .vjs-current-time,
+.video-js .vjs-duration {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #cbd5e0;
+}
+
+.video-js .vjs-progress-control {
+  margin: 0 1rem;
+}
+
+.video-js .vjs-progress-holder {
+  background: rgba(113, 128, 150, 0.3);
+  height: 4px;
+  border-radius: 2px;
+}
+
+.video-js .vjs-play-progress {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 2px;
+}
+
+.video-js .vjs-play-progress:before {
+  background: #667eea;
+  box-shadow: 0 0 8px rgba(102, 126, 234, 0.8);
+}
+
+.video-js .vjs-fullscreen-control {
+  margin-left: auto;
+}
+
+.video-js .vjs-menu {
+  background: #2d3748;
+  border: 1px solid #4a5568;
+  border-radius: 6px;
+}
+
+.video-js .vjs-menu-item {
+  color: #f7fafc;
+  font-size: 0.8rem;
+}
+
+.video-js .vjs-menu-item:hover {
+  background: #667eea;
+  color: #fff;
+}
+
+.video-js.vjs-playing .vjs-big-play-button {
+  display: none;
+}
+
+.video-js.vjs-paused .vjs-big-play-button {
+  display: block;
+}
+
+/* Video.js Theme Customization */
+.video-js.vjs-theme-city .vjs-big-play-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+  animation: pulse 2s infinite;
+}
+
+/* Video Pulse Animation Override */
+@keyframes videoPulse {
+  0%, 100% {
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5), 0 0 0 0 rgba(102, 126, 234, 0.7);
+  }
+  50% {
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5), 0 0 0 20px rgba(102, 126, 234, 0);
+  }
+}
+
+.video-js.vjs-theme-city .vjs-control-bar {
+  background: linear-gradient(135deg, rgba(45, 55, 72, 0.95) 0%, rgba(26, 32, 44, 0.95) 100%);
+  backdrop-filter: blur(10px);
+}
+
+.video-js.vjs-theme-city .vjs-progress-holder {
+  background: rgba(113, 128, 150, 0.4);
+}
+
+.video-js.vjs-theme-city .vjs-play-progress {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.video-js.vjs-theme-city .vjs-load-progress {
+  background: rgba(102, 126, 234, 0.3);
+}
+
+/* Loading spinner */
+.video-js .vjs-loading-spinner {
+  border-color: #667eea;
+}
+
+.video-js .vjs-loading-spinner:before,
+.video-js .vjs-loading-spinner:after {
+  border-color: #667eea;
+}
+
+/* Error display */
+.video-js .vjs-error-display {
+  background: rgba(197, 48, 48, 0.9);
+  color: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Responsive video */
+@media (max-width: 768px) {
+  .video-js .vjs-control-bar {
+    height: 2.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .video-js .vjs-big-play-button {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+  }
+
+  .video-js .vjs-control {
+    font-size: 0.75rem;
+  }
+
+  .video-js .vjs-current-time,
+  .video-js .vjs-duration {
+    font-size: 0.7rem;
+  }
 }

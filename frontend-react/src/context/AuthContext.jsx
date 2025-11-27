@@ -22,7 +22,10 @@ export function AuthProvider({ children }) {
       setUser(res.data);
     } catch (e) {
       console.error('Profile fetch failed', e);
-      logout();
+      // Clear invalid token
+      localStorage.removeItem('token');
+      setToken(null);
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -50,8 +53,8 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
+    setLoading(false);
   }
-
   const value = { token, user, login, register, logout, loading };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

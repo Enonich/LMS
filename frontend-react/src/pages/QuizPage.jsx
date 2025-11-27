@@ -9,9 +9,11 @@ export default function QuizPage(){
   const [selected, setSelected] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [stats, setStats] = useState({ total: 0, correct: 0, streak: 0 });
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [filterDepartment, setFilterDepartment] = useState('');
 
   useEffect(()=>{ 
     if(token){ 
@@ -31,7 +33,7 @@ export default function QuizPage(){
     }
   }
 
-  function saveStats(correct){
+  function saveStats(correct, correctAnswer){
     const newStats = {
       total: stats.total + 1,
       correct: stats.correct + (correct ? 1 : 0),
@@ -44,7 +46,7 @@ export default function QuizPage(){
       question: question.question_text,
       userAnswer: selected,
       correct,
-      correctAnswer: result.correct_answer,
+      correctAnswer: correctAnswer,
       timestamp: new Date().toISOString()
     }, ...history].slice(0, 10);
     setHistory(newHistory);
@@ -54,12 +56,17 @@ export default function QuizPage(){
   async function load(){
     setLoading(true);
     try { 
+      console.log('Fetching question from:', `${API_BASE}/questions/daily`);
       const res= await axios.get(`${API_BASE}/questions/daily`, { 
         headers:{ Authorization:`Bearer ${token}` } 
       }); 
+      console.log('Question loaded:', res.data);
       setQuestion(res.data); 
     } catch(e){ 
-      console.error(e);
+      console.error('Error loading question:', e.response?.data || e.message);
+      if (e.response?.status === 404) {
+        console.warn('No questions available for your department:', user?.department);
+      }
     } finally { 
       setLoading(false); 
     }
@@ -67,6 +74,7 @@ export default function QuizPage(){
 
   async function submit(){
     if(!selected || !selected.trim()) return;
+    setSubmitting(true);
     try {
       const res = await axios.post(`${API_BASE}/questions/answer`, { 
         question_id: question.question_id, 
@@ -74,10 +82,29 @@ export default function QuizPage(){
       }, { 
         headers:{ Authorization:`Bearer ${token}` } 
       });
-      setResult(res.data);
-      saveStats(res.data.correct);
+      
+      if (res.data && typeof res.data.correct !== 'undefined') {
+        setResult(res.data);
+        saveStats(res.data.correct, res.data.correct_answer);
+      } else {
+        console.error('Invalid response format:', res.data);
+        setResult({
+          correct: false,
+          correct_answer: 'Unknown',
+          explanation: 'Received invalid response from server. Please try again.'
+        });
+      }
     } catch(e){ 
-      alert('Submit failed'); 
+      console.error('Error submitting answer:', e.response?.data || e.message);
+      // Show error in UI - don't try to access question.answer
+      const errorMsg = e.response?.data?.detail || 'Failed to submit answer. Please try again.';
+      setResult({
+        correct: false,
+        correct_answer: 'Unable to verify',
+        explanation: errorMsg
+      });
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -92,10 +119,15 @@ export default function QuizPage(){
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h2 style={styles.title}>
-          <i className="fas fa-brain" style={{ marginRight:'0.75rem' }}></i>
-          Daily Quiz
-        </h2>
+        <div>
+          <h2 style={styles.title}>
+            <i className="fas fa-brain" style={{ marginRight:'0.75rem' }}></i>
+            Daily Quiz
+          </h2>
+          <p style={styles.subtitle}>
+            Test your knowledge with questions from {user.department}
+          </p>
+        </div>
         <button 
           onClick={()=>setShowHistory(!showHistory)} 
           style={styles.historyBtn}
@@ -204,12 +236,15 @@ export default function QuizPage(){
                   {question.options.map((opt, idx) => (
                     <button 
                       key={opt} 
-                      onClick={()=>setSelected(opt)} 
+                      onClick={()=>!submitting && setSelected(opt)} 
+                      disabled={submitting}
                       style={{
                         ...styles.optionBtn,
                         background: selected===opt ? 'rgba(102,126,234,0.1)' : '#fff',
                         borderColor: selected===opt ? '#667eea' : '#e2e8f0',
-                        borderWidth: selected===opt ? '2px' : '1px'
+                        borderWidth: selected===opt ? '2px' : '1px',
+                        cursor: submitting ? 'not-allowed' : 'pointer',
+                        opacity: submitting ? 0.6 : 1
                       }}
                     >
                       <span style={styles.optionLetter}>{String.fromCharCode(65 + idx)}</span>
@@ -223,8 +258,13 @@ export default function QuizPage(){
                     type="text" 
                     value={selected || ''} 
                     onChange={e=>setSelected(e.target.value)} 
-                    onKeyPress={e => e.key === 'Enter' && submit()}
-                    style={styles.textInput} 
+                    onKeyPress={e => e.key === 'Enter' && !submitting && submit()}
+                    disabled={submitting}
+                    style={{
+                      ...styles.textInput,
+                      cursor: submitting ? 'not-allowed' : 'text',
+                      opacity: submitting ? 0.6 : 1
+                    }} 
                     placeholder="Type your answer here..."
                   />
                 </div>
@@ -232,15 +272,24 @@ export default function QuizPage(){
               
               <button 
                 onClick={submit} 
-                disabled={!selected || !selected.trim()} 
+                disabled={!selected || !selected.trim() || submitting} 
                 style={{
                   ...styles.submitBtn,
-                  opacity: (!selected || !selected.trim()) ? 0.5 : 1,
-                  cursor: (!selected || !selected.trim()) ? 'not-allowed' : 'pointer'
+                  opacity: (!selected || !selected.trim() || submitting) ? 0.5 : 1,
+                  cursor: (!selected || !selected.trim() || submitting) ? 'not-allowed' : 'pointer'
                 }}
               >
-                <i className="fas fa-paper-plane" style={{ marginRight:'0.5rem' }}></i>
-                Submit Answer
+                {submitting ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin" style={{ marginRight:'0.5rem' }}></i>
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-paper-plane" style={{ marginRight:'0.5rem' }}></i>
+                    Submit Answer
+                  </>
+                )}
               </button>
             </div>
           )}
@@ -285,92 +334,123 @@ export default function QuizPage(){
 
 const styles = {
   container: {
-    background:'#ffffff',
-    borderRadius:'20px',
+    background:'rgba(255,255,255,0.85)',
+    backdropFilter:'blur(30px) saturate(180%)',
+    borderRadius:'24px',
     padding:'2rem',
-    boxShadow:'0 4px 20px rgba(0,0,0,0.08)',
-    minHeight:'calc(100vh - 4rem)'
+    boxShadow:'0 10px 40px rgba(0,0,0,0.12), 0 0 60px rgba(102,126,234,0.08), inset 0 0 0 1px rgba(255,255,255,0.3)',
+    maxHeight:'calc(100vh - 3rem)',
+    overflowY:'auto',
+    border:'1px solid rgba(255,255,255,0.3)',
+    animation:'fadeIn 0.6s ease'
   },
   header: {
     display:'flex',
     justifyContent:'space-between',
-    alignItems:'center',
-    marginBottom:'2rem'
+    alignItems:'flex-start',
+    marginBottom:'1rem',
+    flexWrap:'wrap',
+    gap:'0.75rem'
   },
   title: {
     fontSize:'2rem',
-    fontWeight:700,
+    fontWeight:900,
     margin:0,
     color:'#1f2937',
     display:'flex',
-    alignItems:'center'
+    alignItems:'center',
+    letterSpacing:'-0.03em',
+    textShadow:'0 2px 10px rgba(0,0,0,0.05)'
+  },
+  subtitle: {
+    fontSize:'1rem',
+    color:'#718096',
+    margin:'0.5rem 0 0 0',
+    fontWeight:500,
+    letterSpacing:'-0.01em'
   },
   historyBtn: {
-    padding:'0.75rem 1.5rem',
-    background:'#f7fafc',
-    border:'1px solid #e2e8f0',
-    borderRadius:'10px',
+    padding:'0.875rem 1.75rem',
+    background:'rgba(247,250,252,0.9)',
+    backdropFilter:'blur(10px)',
+    border:'1px solid rgba(226,232,240,0.6)',
+    borderRadius:'14px',
     cursor:'pointer',
-    fontSize:'0.9rem',
-    fontWeight:500,
+    fontSize:'0.95rem',
+    fontWeight:600,
     color:'#4a5568',
-    transition:'all 0.2s',
+    transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     display:'flex',
-    alignItems:'center'
+    alignItems:'center',
+    boxShadow:'0 2px 8px rgba(0,0,0,0.05)'
   },
   statsGrid: {
     display:'grid',
-    gridTemplateColumns:'repeat(auto-fit, minmax(150px, 1fr))',
+    gridTemplateColumns:'repeat(auto-fit, minmax(140px, 1fr))',
     gap:'1rem',
-    marginBottom:'2rem'
+    marginBottom:'1.5rem'
   },
   statCard: {
-    background:'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    padding:'1.5rem',
-    borderRadius:'16px',
+    background:'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+    backgroundSize:'200% 200%',
+    padding:'1.25rem',
+    borderRadius:'18px',
     textAlign:'center',
     color:'#fff',
-    boxShadow:'0 4px 15px rgba(102,126,234,0.3)'
+    boxShadow:'0 6px 20px rgba(102,126,234,0.4), 0 0 40px rgba(118,75,162,0.2), inset 0 2px 4px rgba(255,255,255,0.2)',
+    animation:'shimmer 3s ease-in-out infinite',
+    border:'1px solid rgba(255,255,255,0.2)',
+    transition:'all 0.3s ease'
   },
   statIcon: {
     fontSize:'2rem',
-    marginBottom:'0.5rem'
+    marginBottom:'0.5rem',
+    filter:'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
   },
   statValue: {
-    fontSize:'2rem',
-    fontWeight:700,
-    marginBottom:'0.25rem'
+    fontSize:'1.75rem',
+    fontWeight:800,
+    marginBottom:'0.25rem',
+    letterSpacing:'-0.02em',
+    textShadow:'0 2px 8px rgba(0,0,0,0.15)'
   },
   statLabel: {
-    fontSize:'0.85rem',
-    opacity:0.9
+    fontSize:'0.9rem',
+    opacity:0.95,
+    fontWeight:500,
+    letterSpacing:'0.02em'
   },
   questionCard: {
-    background:'#fff',
-    border:'1px solid #e5e7eb',
-    borderRadius:'16px',
+    background:'rgba(255,255,255,0.95)',
+    backdropFilter:'blur(20px)',
+    border:'1px solid rgba(229,231,235,0.6)',
+    borderRadius:'20px',
     padding:'2rem',
-    maxWidth:'800px',
+    maxWidth:'850px',
     margin:'0 auto',
-    boxShadow:'0 2px 8px rgba(0,0,0,0.05)'
+    boxShadow:'0 6px 20px rgba(0,0,0,0.08), 0 0 40px rgba(102,126,234,0.05)',
+    animation:'slideUp 0.5s ease'
   },
   questionHeader: {
     display:'flex',
     justifyContent:'space-between',
     alignItems:'center',
-    marginBottom:'1.5rem',
+    marginBottom:'1rem',
     flexWrap:'wrap',
     gap:'0.5rem'
   },
   questionBadge: {
-    background:'rgba(102,126,234,0.1)',
+    background:'linear-gradient(135deg, rgba(102,126,234,0.15), rgba(118,75,162,0.15))',
+    backdropFilter:'blur(10px)',
     color:'#667eea',
-    padding:'0.5rem 1rem',
-    borderRadius:'20px',
-    fontSize:'0.85rem',
-    fontWeight:600,
+    padding:'0.625rem 1.25rem',
+    borderRadius:'24px',
+    fontSize:'0.9rem',
+    fontWeight:700,
     display:'flex',
-    alignItems:'center'
+    alignItems:'center',
+    border:'1px solid rgba(102,126,234,0.2)',
+    boxShadow:'0 2px 8px rgba(102,126,234,0.1)'
   },
   questionType: {
     color:'#718096',
@@ -379,10 +459,11 @@ const styles = {
   },
   questionText: {
     fontSize:'1.2rem',
-    fontWeight:600,
+    fontWeight:700,
     color:'#1f2937',
-    marginBottom:'2rem',
-    lineHeight:1.6
+    marginBottom:'1.5rem',
+    lineHeight:1.6,
+    letterSpacing:'-0.01em'
   },
   optionsContainer: {
     display:'flex',
@@ -393,130 +474,159 @@ const styles = {
   optionBtn: {
     textAlign:'left',
     padding:'1rem 1.25rem',
-    border:'1px solid #e2e8f0',
-    borderRadius:'12px',
+    border:'2px solid rgba(226,232,240,0.6)',
+    borderRadius:'16px',
     cursor:'pointer',
-    fontSize:'0.95rem',
-    background:'#fff',
-    transition:'all 0.2s',
+    fontSize:'1rem',
+    color:'#1f2937',
+    background:'rgba(255,255,255,0.95)',
+    backdropFilter:'blur(10px)',
+    transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     display:'flex',
     alignItems:'center',
-    gap:'1rem'
+    gap:'1rem',
+    fontWeight:600,
+    boxShadow:'0 2px 8px rgba(0,0,0,0.05)',
+    position:'relative',
+    overflow:'hidden'
   },
   optionLetter: {
-    background:'#667eea',
+    background:'linear-gradient(135deg, #667eea, #764ba2)',
     color:'#fff',
-    width:'32px',
-    height:'32px',
+    width:'40px',
+    height:'40px',
     borderRadius:'50%',
     display:'flex',
     alignItems:'center',
     justifyContent:'center',
-    fontWeight:700,
-    fontSize:'0.9rem',
-    flexShrink:0
+    fontWeight:800,
+    fontSize:'1rem',
+    flexShrink:0,
+    boxShadow:'0 4px 12px rgba(102,126,234,0.3), inset 0 2px 4px rgba(255,255,255,0.2)',
+    border:'2px solid rgba(255,255,255,0.2)'
   },
   inputContainer: {
     marginBottom:'1.5rem'
   },
   textInput: {
     width:'100%',
-    padding:'1rem',
-    border:'2px solid #e2e8f0',
-    borderRadius:'12px',
-    fontSize:'1rem',
+    padding:'1.125rem 1.25rem',
+    border:'2px solid rgba(226,232,240,0.6)',
+    borderRadius:'14px',
+    fontSize:'1.05rem',
     outline:'none',
-    transition:'border-color 0.2s',
-    boxSizing:'border-box'
+    transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    boxSizing:'border-box',
+    background:'rgba(247,250,252,0.7)',
+    backdropFilter:'blur(10px)',
+    fontWeight:500
   },
   submitBtn: {
     width:'100%',
-    background:'linear-gradient(135deg,#667eea,#764ba2)',
+    background:'linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%)',
+    backgroundSize:'200% 200%',
     color:'#fff',
     border:'none',
-    padding:'1rem',
-    borderRadius:'12px',
-    fontSize:'1rem',
-    fontWeight:600,
+    padding:'1.125rem',
+    borderRadius:'14px',
+    fontSize:'1.05rem',
+    fontWeight:700,
     cursor:'pointer',
-    transition:'all 0.2s',
+    transition:'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
     display:'flex',
     alignItems:'center',
     justifyContent:'center',
-    boxShadow:'0 4px 15px rgba(102,126,234,0.4)'
+    boxShadow:'0 6px 20px rgba(102,126,234,0.45), 0 0 40px rgba(118,75,162,0.25), inset 0 2px 4px rgba(255,255,255,0.2)',
+    animation:'shimmer 3s ease-in-out infinite',
+    letterSpacing:'0.03em',
+    border:'1px solid rgba(255,255,255,0.2)'
   },
   resultCard: {
-    background:'#fff',
-    border:'1px solid #e5e7eb',
-    borderRadius:'16px',
-    maxWidth:'800px',
+    background:'rgba(255,255,255,0.95)',
+    backdropFilter:'blur(20px)',
+    border:'1px solid rgba(229,231,235,0.6)',
+    borderRadius:'24px',
+    maxWidth:'850px',
     margin:'0 auto',
     overflow:'hidden',
-    boxShadow:'0 4px 20px rgba(0,0,0,0.1)'
+    boxShadow:'0 10px 40px rgba(0,0,0,0.15), 0 0 60px rgba(102,126,234,0.1)',
+    animation:'scaleIn 0.5s ease'
   },
   resultHeader: {
     padding:'2rem',
     textAlign:'center',
-    color:'#fff'
+    color:'#fff',
+    position:'relative',
+    overflow:'hidden'
   },
   resultIcon: {
     fontSize:'4rem',
-    marginBottom:'1rem'
+    marginBottom:'0.75rem',
+    filter:'drop-shadow(0 4px 12px rgba(0,0,0,0.2))',
+    animation:'float 2s ease-in-out infinite'
   },
   resultTitle: {
-    fontSize:'1.75rem',
-    fontWeight:700,
-    margin:'0 0 0.5rem'
+    fontSize:'2rem',
+    fontWeight:900,
+    margin:'0 0 0.75rem',
+    letterSpacing:'-0.02em',
+    textShadow:'0 2px 12px rgba(0,0,0,0.2)'
   },
   resultSubtitle: {
-    fontSize:'1rem',
+    fontSize:'1.1rem',
     margin:0,
-    opacity:0.95
+    opacity:0.95,
+    fontWeight:500
   },
   explanation: {
-    padding:'2rem',
-    background:'#f7fafc'
+    padding:'1.75rem',
+    background:'rgba(247,250,252,0.8)',
+    backdropFilter:'blur(10px)'
   },
   explanationHeader: {
     fontSize:'1.1rem',
-    fontWeight:600,
+    fontWeight:700,
     color:'#2d3748',
     marginBottom:'1rem',
     display:'flex',
-    alignItems:'center'
+    alignItems:'center',
+    gap:'0.5rem'
   },
   explanationText: {
-    fontSize:'0.95rem',
+    fontSize:'1rem',
     color:'#4a5568',
-    lineHeight:1.7
+    lineHeight:1.8,
+    fontWeight:500
   },
   resultActions: {
-    padding:'1.5rem 2rem'
+    padding:'1.5rem 1.75rem'
   },
   nextBtn: {
     width:'100%',
-    background:'linear-gradient(135deg,#48bb78,#38a169)',
+    background:'linear-gradient(135deg,#48bb78 0%,#38a169 100%)',
     color:'#fff',
     border:'none',
-    padding:'1rem',
-    borderRadius:'12px',
-    fontSize:'1rem',
-    fontWeight:600,
+    padding:'1.125rem',
+    borderRadius:'14px',
+    fontSize:'1.05rem',
+    fontWeight:700,
     cursor:'pointer',
-    transition:'all 0.2s',
+    transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     display:'flex',
     alignItems:'center',
     justifyContent:'center',
-    boxShadow:'0 4px 15px rgba(72,187,120,0.4)'
+    boxShadow:'0 6px 20px rgba(72,187,120,0.45), 0 0 30px rgba(56,161,105,0.2), inset 0 2px 4px rgba(255,255,255,0.2)',
+    letterSpacing:'0.03em',
+    border:'1px solid rgba(255,255,255,0.2)'
   },
   loadingState: {
     textAlign:'center',
-    padding:'4rem 2rem',
+    padding:'2rem 1rem',
     color:'#718096'
   },
   emptyState: {
     textAlign:'center',
-    padding:'4rem 2rem',
+    padding:'2rem 1rem',
     color:'#718096'
   },
   retryBtn: {
@@ -537,28 +647,32 @@ const styles = {
     margin:'0 auto'
   },
   historyTitle: {
-    fontSize:'1.5rem',
+    fontSize:'1.25rem',
     fontWeight:700,
     color:'#1f2937',
-    marginBottom:'1.5rem'
+    marginBottom:'1rem'
   },
   historyList: {
     display:'flex',
     flexDirection:'column',
-    gap:'1rem'
+    gap:'0.75rem',
+    maxHeight:'60vh',
+    overflowY:'auto'
   },
   historyItem: {
-    background:'#fff',
-    border:'1px solid #e5e7eb',
-    borderRadius:'12px',
-    padding:'1.5rem',
-    boxShadow:'0 2px 4px rgba(0,0,0,0.05)'
+    background:'rgba(255,255,255,0.95)',
+    backdropFilter:'blur(10px)',
+    border:'1px solid rgba(229,231,235,0.6)',
+    borderRadius:'16px',
+    padding:'1.25rem',
+    boxShadow:'0 4px 12px rgba(0,0,0,0.06)',
+    transition:'all 0.3s ease'
   },
   historyHeader: {
     display:'flex',
     justifyContent:'space-between',
     alignItems:'center',
-    marginBottom:'1rem',
+    marginBottom:'0.75rem',
     flexWrap:'wrap',
     gap:'0.5rem'
   },
@@ -574,10 +688,10 @@ const styles = {
     color:'#718096'
   },
   historyQuestion: {
-    fontSize:'1rem',
+    fontSize:'0.95rem',
     fontWeight:600,
     color:'#2d3748',
-    marginBottom:'1rem'
+    marginBottom:'0.75rem'
   },
   historyAnswers: {
     fontSize:'0.9rem',

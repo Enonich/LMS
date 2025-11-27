@@ -98,7 +98,7 @@ export default function MaterialUploadModal({ token, onClose, onUploadSuccess })
         data.append('file', file);
       }
 
-      await axios.post(`${API_BASE}/materials`, data, {
+      await axios.post(`${API_BASE}/admin/materials/upload`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
@@ -402,6 +402,7 @@ const styles = {
     transition: 'all 0.2s',
     outline: 'none',
     background: '#ffffff',
+    color: '#2d3748',
     cursor: 'pointer',
     fontFamily: 'inherit',
     boxSizing: 'border-box'
