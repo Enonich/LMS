@@ -7,6 +7,7 @@ A modern, production-ready learning management system with AI-powered assessment
 - **User Management**: Registration, authentication, JWT tokens
 - **Learning Materials**: Upload & manage PDFs, videos, text content
 - **AI-Powered Quizzes**: Daily questions with LLM explanations
+- **Question Extraction**: Automated extraction from PDF documents
 - **Progress Tracking**: Real-time learning analytics
 - **Smart Scheduling**: Automated question delivery
 - **Modern UI**: Responsive web interface
@@ -44,6 +45,10 @@ LMS/
 │       ├── validation_utils.py # Input validation
 │       ├── rate_limiting.py   # Rate limiting
 │       └── logging_config.py  # Logging setup
+│
+├── backend/                    # Question extraction
+│   ├── extract_questions.py  # PDF question extractor
+│   └── upload_questions.py   # MongoDB upload service
 │
 ├── frontend/                   # Web interface
 │   └── index.html             # Main UI
@@ -127,6 +132,106 @@ pytest tests/test_backend.py --cov=src
 # Run benchmarks
 python scripts/benchmark.py
 ```
+
+## 📄 Question Extraction from PDFs
+
+The system can automatically extract questions from PDF documents in specific formats. The extraction module supports the following formats:
+
+### ✅ Supported PDF Formats
+
+#### 1. **Science Bowl Format** (PHYS-XX, CHEM-XX, MATH-XX, etc.)
+```
+PHYS-91; Multiple Choice: What is the speed of light?
+w) 3 × 10^8 m/s
+x) 3 × 10^6 m/s  
+y) 3 × 10^10 m/s
+z) None of the above
+ANSWER: W -- 3 × 10^8 M/S
+
+PHYS-91; Short Answer: What is Newton's first law also known as?
+ANSWER: LAW OF INERTIA
+```
+
+**Requirements:**
+- Question ID pattern: `[A-Z]+-\d+;` (e.g., PHYS-91, CHEM-92, MATH-91)
+- Question type must be specified: `Multiple Choice:`, `Short Answer:`, or `True/False:`
+- Options use `w)`, `x)`, `y)`, `z)` format
+- Each question must have an `ANSWER:` line
+
+#### 2. **Numbered Format** (With a/b/c/d options)
+```
+1. Multiple Choice: What is the powerhouse of the cell?
+a) Nucleus
+b) Mitochondria
+c) Ribosome
+d) Golgi apparatus
+ANSWER: B -- MITOCHONDRIA
+
+2. Multiple Choice: What process do plants use to make food?
+a) Respiration
+b) Photosynthesis
+c) Fermentation
+d) Decomposition
+ANSWER: B -- PHOTOSYNTHESIS
+```
+
+**Requirements:**
+- Questions numbered sequentially: `1.`, `2.`, `3.`, etc.
+- Question type specified: `Multiple Choice:`
+- Options use `a)`, `b)`, `c)`, `d)` format
+- Each question must have an `ANSWER:` line
+
+### ❌ Unsupported Formats
+
+The extractor **cannot** handle:
+- ❌ Scanned PDFs without OCR text
+- ❌ Image-based questions
+- ❌ Tables with questions
+- ❌ Freeform text without structured format
+- ❌ Questions without clear answer markers
+- ❌ Custom numbering schemes (Roman numerals, etc.)
+
+### 🔧 Using the Extractor
+
+```python
+from backend.extract_questions import QuestionExtractor
+from backend.upload_questions import QuestionUploader
+
+# Extract questions from PDF
+extractor = QuestionExtractor()
+questions = extractor.extract("path/to/questions.pdf")
+
+# Upload to MongoDB
+uploader = QuestionUploader()
+count = uploader.upload(
+    questions=questions,
+    department="Physics",
+    created_by="admin"
+)
+print(f"Uploaded {count} questions")
+```
+
+### 📋 Extracted Question Structure
+
+Each question is extracted with Pydantic validation:
+
+```python
+{
+    "question_text": "What is the speed of light?",
+    "options": ["3 × 10^8 m/s", "3 × 10^6 m/s", "3 × 10^10 m/s"],
+    "answer": "3 × 10^8 m/s",
+    "question_type": "multiple_choice",  # or "short_answer", "true_false"
+    "public_text": "What is the speed of light?"
+}
+```
+
+### 💡 Tips for Best Results
+
+1. **Clean PDFs**: Ensure PDFs have selectable text (not images)
+2. **Consistent Format**: Use one of the supported formats throughout
+3. **Clear Markers**: Always include `ANSWER:` after each question
+4. **Proper Encoding**: Use UTF-8 encoding for special characters
+5. **Test First**: Test extraction on a small sample before bulk upload
 
 ## 📖 Documentation
 
