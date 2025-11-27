@@ -89,6 +89,19 @@ async def serve_frontend():
         return FileResponse(frontend_path)
     return {"message": "React frontend not found. Please run 'npm run build' in frontend-react directory."}
 
+# Catch-all route for React Router (must be at the end)
+@app.get("/{full_path:path}")
+async def serve_spa(full_path: str):
+    """Serve the React SPA for all non-API routes (client-side routing)"""
+    # Ignore API routes and static files
+    if full_path.startswith("api/") or full_path.startswith("assets/") or full_path.startswith("static/") or full_path.startswith("uploads/"):
+        return {"error": "Not found"}
+    
+    frontend_path = Path("frontend-react/dist/index.html")
+    if frontend_path.exists():
+        return FileResponse(frontend_path)
+    return {"message": "React frontend not found. Please run 'npm run build' in frontend-react directory."}
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
