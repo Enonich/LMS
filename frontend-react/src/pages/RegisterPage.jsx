@@ -147,40 +147,34 @@ const styles = {
     overflow:'hidden'
   },
   card: {
-    background:'rgba(255,255,255,0.95)', 
-    backdropFilter:'blur(30px) saturate(180%)',
+    background:'#ffffff', 
     padding:'3rem', 
-    borderRadius:'28px', 
+    borderRadius:'16px', 
     width:'100%',
     maxWidth:'540px', 
-    boxShadow:'0 30px 80px rgba(0,0,0,0.3), 0 0 100px rgba(102,126,234,0.2), inset 0 0 0 1px rgba(255,255,255,0.3)',
-    border:'1px solid rgba(255,255,255,0.5)',
-    animation:'scaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+    boxShadow:'0 4px 20px rgba(0,0,0,0.1)',
+    border:'1px solid #e5e7eb',
     position:'relative',
     zIndex:1
   },
   logoSection: {
     textAlign:'center',
-    marginBottom:'2.5rem',
-    animation:'slideDown 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
+    marginBottom:'2.5rem'
   },
   logo: {
     fontSize:'4.5rem',
     marginBottom:'0.75rem',
-    animation:'float 3s ease-in-out infinite',
-    display:'inline-block',
-    filter:'drop-shadow(0 10px 20px rgba(102,126,234,0.35))'
+    display:'inline-block'
   },
   brandName: {
     fontSize:'2.2rem',
     fontWeight:800,
     margin:'0.5rem 0 0.25rem',
-    background:'linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%)',
+    background:'linear-gradient(135deg,#667eea 0%,#764ba2 100%)',
     WebkitBackgroundClip:'text',
     WebkitTextFillColor:'transparent',
     backgroundClip:'text',
-    letterSpacing:'-0.02em',
-    textShadow:'0 2px 20px rgba(102,126,234,0.2)'
+    letterSpacing:'-0.02em'
   },
   tagline: {
     fontSize:'1rem',
@@ -211,19 +205,16 @@ const styles = {
     lineHeight:1.5
   },
   error: {
-    background:'linear-gradient(135deg, rgba(254, 215, 215, 0.9), rgba(252, 129, 129, 0.2))',
-    backdropFilter:'blur(10px)',
+    background:'#fed7d7',
     color:'#c53030',
     padding:'1rem 1.25rem',
-    borderRadius:'14px',
+    borderRadius:'12px',
     marginBottom:'1.5rem',
     fontSize:'0.95rem',
     display:'flex',
     alignItems:'center',
     fontWeight:600,
-    border:'1px solid rgba(197, 48, 48, 0.2)',
-    boxShadow:'0 4px 12px rgba(197, 48, 48, 0.15)',
-    animation:'slideDown 0.4s ease'
+    border:'1px solid #fc8181'
   },
   formGroup: {
     marginBottom:'1.5rem'
@@ -245,25 +236,23 @@ const styles = {
     width:'100%',
     padding:'1rem 1.25rem',
     border:'2px solid #e2e8f0',
-    borderRadius:'14px',
+    borderRadius:'12px',
     fontSize:'1rem',
-    transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    transition:'all 0.2s',
     outline:'none',
     fontFamily:'inherit',
     boxSizing:'border-box',
-    background:'rgba(247,250,252,0.5)',
-    backdropFilter:'blur(10px)'
+    background:'#ffffff'
   },
   select: {
     width:'100%',
     padding:'1rem 1.25rem',
     border:'2px solid #e2e8f0',
-    borderRadius:'14px',
+    borderRadius:'12px',
     fontSize:'1rem',
-    transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    transition:'all 0.2s',
     outline:'none',
-    background:'rgba(247,250,252,0.5)',
-    backdropFilter:'blur(10px)',
+    background:'#ffffff',
     color:'#1f2937',
     cursor:'pointer',
     fontFamily:'inherit',
@@ -297,22 +286,18 @@ const styles = {
     marginTop:'0.75rem',
     padding:'1.125rem',
     border:'none',
-    borderRadius:'14px',
-    background:'linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%)',
-    backgroundSize:'200% 200%',
+    borderRadius:'12px',
+    background:'linear-gradient(135deg,#667eea 0%,#764ba2 100%)',
     color:'#fff',
     fontWeight:700,
     fontSize:'1.05rem',
     cursor:'pointer',
-    transition:'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-    boxShadow:'0 10px 30px rgba(102,126,234,0.45), 0 0 50px rgba(118,75,162,0.25)',
+    transition:'all 0.2s',
+    boxShadow:'0 4px 12px rgba(102,126,234,0.3)',
     display:'flex',
     alignItems:'center',
     justifyContent:'center',
     fontFamily:'inherit',
-    position:'relative',
-    overflow:'hidden',
-    animation:'shimmer 3s ease-in-out infinite',
     letterSpacing:'0.03em'
   },
   footer: {

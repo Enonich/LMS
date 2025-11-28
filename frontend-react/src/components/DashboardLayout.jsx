@@ -45,25 +45,24 @@ export default function DashboardLayout({ children }) {
   };
   
   return (
-    <div style={{ display:'flex', flexDirection:'column', minHeight:'100vh', background:'transparent' }}>
+    <div style={{ display:'flex', flexDirection:'column', minHeight:'100vh', background:'#ffffff' }}>
       {/* Modern Top Navigation Bar */}
       <header style={{ 
-        background:'rgba(255,255,255,0.85)', 
-        backdropFilter:'blur(30px) saturate(180%)', 
+        background:'#ffffff', 
         padding:'1rem 2rem',
         display:'flex',
         justifyContent:'space-between',
         alignItems:'center',
-        boxShadow:'0 4px 20px rgba(0,0,0,0.1), 0 0 40px rgba(102,126,234,0.05)',
+        boxShadow:'0 1px 3px rgba(0,0,0,0.1)',
         zIndex:100,
-        borderBottom:'1px solid rgba(255,255,255,0.3)',
+        borderBottom:'1px solid #e5e7eb',
         position:'sticky',
         top:0
       }}>
         <div style={{ 
           fontWeight:800, 
           fontSize:'1.75rem', 
-          background:'linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%)', 
+          background:'linear-gradient(135deg,#667eea 0%,#764ba2 100%)', 
           WebkitBackgroundClip:'text', 
           WebkitTextFillColor:'transparent', 
           backgroundClip:'text',
@@ -71,12 +70,11 @@ export default function DashboardLayout({ children }) {
           alignItems:'center',
           gap:'0.75rem',
           letterSpacing:'-0.02em',
-          filter:'drop-shadow(0 2px 8px rgba(102,126,234,0.3))',
           transition:'all 0.3s ease',
           cursor:'pointer'
         }}>
-          <span style={{ fontSize:'2rem', animation:'float 3s ease-in-out infinite' }}>🧠</span>
-          LMS Pro
+          <span style={{ fontSize:'2rem' }}>🧠</span>
+          EbitLearn
         </div>
 
         <div style={{ 
@@ -194,14 +192,13 @@ export default function DashboardLayout({ children }) {
       {/* Main Content Area */}
       <div style={{ display:'grid', gridTemplateColumns:'280px 1fr', flex:1, overflow:'hidden', gap:'0' }}>
         <aside style={{ 
-          background:'rgba(255,255,255,0.85)', 
-          backdropFilter:'blur(30px) saturate(180%)', 
+          background:'#ffffff', 
           padding:'2rem 1.5rem', 
           display:'flex', 
           flexDirection:'column', 
-          boxShadow:'4px 0 20px rgba(0,0,0,0.08), 0 0 40px rgba(102,126,234,0.05)',
+          boxShadow:'1px 0 3px rgba(0,0,0,0.1)',
           overflowY:'auto',
-          borderRight:'1px solid rgba(255,255,255,0.3)'
+          borderRight:'1px solid #e5e7eb'
         }}>
           <nav style={{ flex:1, display:'flex', flexDirection:'column', gap:'0.5rem' }}>
             {navItems.filter(item => item.to !== '/schedule').map(item => (
@@ -237,7 +234,7 @@ export default function DashboardLayout({ children }) {
           </nav>
         </aside>
         
-        <main style={{ padding:'2rem', overflowY:'auto', background:'transparent' }}>
+        <main style={{ padding:'2rem', overflowY:'auto', background:'#f7fafc' }}>
           <div style={{ maxWidth:'1400px', margin:'0 auto' }}>
             {children}
           </div>

@@ -261,14 +261,12 @@ export default function MaterialsPage() {
 
   return (
     <div style={{ 
-      background: 'rgba(255,255,255,0.85)', 
-      backdropFilter: 'blur(30px) saturate(180%)',
-      borderRadius: '24px', 
+      background: '#ffffff', 
+      borderRadius: '16px', 
       padding: '2.5rem', 
-      boxShadow: '0 10px 40px rgba(0,0,0,0.12), 0 0 60px rgba(102,126,234,0.08), inset 0 0 0 1px rgba(255,255,255,0.3)', 
+      boxShadow: '0 2px 8px rgba(0,0,0,0.1)', 
       minHeight: 'calc(100vh - 4rem)',
-      border: '1px solid rgba(255,255,255,0.3)',
-      animation: 'fadeIn 0.6s ease'
+      border: '1px solid #e5e7eb'
     }}>
       {!user ? (
         <div style={loadingContainer}>
@@ -457,39 +455,39 @@ export default function MaterialsPage() {
   );
 }
 
-// === MODERN STYLES ===
-const headerSection = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1.5rem' };
-const title = { fontSize: '2.2rem', fontWeight: 900, margin: 0, color: '#1f2937', letterSpacing: '-0.03em', textShadow: '0 2px 10px rgba(0,0,0,0.05)' };
-const subtitle = { fontSize: '1rem', color: '#718096', margin: '0.5rem 0 0', fontWeight: 500 };
-const uploadBtn = { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: '#fff', border: 'none', padding: '0.875rem 1.75rem', borderRadius: '14px', fontSize: '1rem', fontWeight: 700, cursor: 'pointer', boxShadow: '0 6px 16px rgba(102,126,234,0.4), 0 0 30px rgba(118,75,162,0.2)', display: 'flex', alignItems: 'center', gap: '0.5rem', transition: 'all 0.3s ease', letterSpacing: '0.02em' };
-const filterSection = { display: 'flex', gap: '0.75rem', alignItems: 'center', marginBottom: '2rem', padding: '1.25rem', background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', border: '1px solid rgba(229,231,235,0.6)', flexWrap: 'wrap' };
-const filterLabel = { fontSize: '1rem', fontWeight: 700, color: '#4a5568', display: 'flex', alignItems: 'center', gap: '0.5rem' };
-const filterBtn = { padding: '0.625rem 1.25rem', background: 'rgba(247,250,252,0.8)', color: '#4a5568', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', backdropFilter: 'blur(10px)' };
-const filterBtnActive = { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: '#fff', borderColor: 'transparent', boxShadow: '0 4px 12px rgba(102,126,234,0.3)' };
-const loadingContainer = { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '5rem 2rem', background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', borderRadius: '20px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)', border: '1px solid rgba(229,231,235,0.6)' };
+// === STYLES ===
+const headerSection = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1.5rem' };
+const title = { fontSize: '2rem', fontWeight: 800, margin: 0, color: '#1f2937', letterSpacing: '-0.02em' };
+const subtitle = { fontSize: '0.95rem', color: '#718096', margin: '0.5rem 0 0', fontWeight: 500 };
+const uploadBtn = { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: '#fff', border: 'none', padding: '0.75rem 1.5rem', borderRadius: '12px', fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer', boxShadow: '0 4px 12px rgba(102,126,234,0.3)', display: 'flex', alignItems: 'center', gap: '0.5rem', transition: 'all 0.2s' };
+const filterSection = { display: 'flex', gap: '0.75rem', alignItems: 'center', marginBottom: '1.5rem', padding: '1rem', background: '#fff', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #e5e7eb', flexWrap: 'wrap' };
+const filterLabel = { fontSize: '0.9rem', fontWeight: 600, color: '#4a5568', display: 'flex', alignItems: 'center', gap: '0.5rem' };
+const filterBtn = { padding: '0.5rem 1rem', background: '#f7fafc', color: '#4a5568', border: '2px solid #e2e8f0', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s' };
+const filterBtnActive = { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: '#fff', borderColor: '#667eea', boxShadow: '0 2px 8px rgba(102,126,234,0.3)' };
+const loadingContainer = { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 2rem', background: '#fff', borderRadius: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #e5e7eb' };
 const emptyState = { ...loadingContainer, textAlign: 'center' };
-const grid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1.75rem' };
-const card = { background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)', border: '1px solid rgba(229,231,235,0.6)', borderRadius: '18px', padding: '1.75rem', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)', cursor: 'pointer', position: 'relative', overflow: 'hidden' };
-const cardWarning = { borderColor: 'rgba(254,215,170,0.8)', background: 'linear-gradient(135deg, rgba(255,250,240,0.95), rgba(254,243,199,0.9))', backdropFilter: 'blur(10px)' };
-const cardCompleted = { borderColor: 'rgba(154,230,180,0.8)', background: 'linear-gradient(135deg, rgba(240,255,244,0.95), rgba(198,246,213,0.9))', backdropFilter: 'blur(10px)' };
-const cardHeader = { display: 'flex', gap: '1.25rem', marginBottom: '1.25rem', alignItems: 'flex-start' };
-const cardIcon = { width: '56px', height: '56px', borderRadius: '16px', background: 'linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1))', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 8px rgba(102,126,234,0.15)', transition: 'all 0.3s ease' };
-const cardTitle = { margin: '0 0 0.75rem', fontSize: '1.15rem', fontWeight: 700, color: '#2d3748', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', letterSpacing: '-0.01em' };
-const cardMeta = { fontSize: '0.85rem', color: '#718096', display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap', fontWeight: 500 };
-const cardDescription = { fontSize: '0.925rem', color: '#4a5568', lineHeight: 1.6, marginBottom: '1.5rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' };
-const cardActions = { display: 'flex', gap: '0.75rem', flexWrap: 'wrap' };
-const btnPrimary = { ...uploadBtn, padding: '0.75rem 1.25rem', fontSize: '0.9rem', boxShadow: '0 4px 12px rgba(102,126,234,0.3)' };
-const btnSecondary = { background: 'rgba(247,250,252,0.9)', backdropFilter: 'blur(10px)', color: '#4a5568', border: '2px solid rgba(226,232,240,0.6)', padding: '0.75rem 1.25rem', borderRadius: '12px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', transition: 'all 0.3s ease' };
-const btnDanger = { background: 'linear-gradient(135deg, #fc8181, #e53e3e)', color: '#fff', border: 'none', padding: '0.75rem 1rem', borderRadius: '12px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', boxShadow: '0 4px 12px rgba(252,129,129,0.3)', transition: 'all 0.3s ease' };
-const btnDangerAlt = { background: 'linear-gradient(135deg, #c53030, #9b2c2c)', color: '#fff', border: 'none', padding: '0.75rem 1rem', borderRadius: '12px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', boxShadow: '0 4px 12px rgba(197,48,48,0.3)', transition: 'all 0.3s ease' };
-const tabContainer = { display: 'flex', gap: '0.5rem', marginBottom: '2rem', padding: '0.625rem', background: 'rgba(247,250,252,0.9)', backdropFilter: 'blur(10px)', borderRadius: '16px', border: '1px solid rgba(226,232,240,0.6)', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' };
-const tabBtn = { flex: 1, padding: '0.875rem 1.25rem', background: 'transparent', color: '#4a5568', border: 'none', borderRadius: '12px', fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', transition: 'all 0.3s ease' };
-const tabBtnActive = { background: 'rgba(255,255,255,0.95)', color: '#667eea', boxShadow: '0 2px 8px rgba(102,126,234,0.15)', fontWeight: 700, backdropFilter: 'blur(10px)' };
-const navBtn = { background: 'rgba(247,250,252,0.9)', backdropFilter: 'blur(10px)', color: '#4a5568', border: '2px solid rgba(226,232,240,0.6)', borderRadius: '10px', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', transition: 'all 0.3s ease', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' };
-const modalBackdrop = { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 5000, animation: 'fadeIn 0.3s ease' };
-const modal = { background: 'rgba(255,255,255,0.98)', backdropFilter: 'blur(30px)', width: '90vw', maxWidth: '1100px', maxHeight: '90vh', overflowY: 'auto', borderRadius: '24px', padding: '2.5rem', boxShadow: '0 20px 60px rgba(0,0,0,0.5), 0 0 100px rgba(102,126,234,0.2)', border: '1px solid rgba(255,255,255,0.3)', animation: 'scaleIn 0.4s ease' };
-const closeBtn = { background: 'rgba(113,128,150,0.1)', backdropFilter: 'blur(10px)', border: 'none', fontSize: '2rem', cursor: 'pointer', color: '#718096', width: '44px', height: '44px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s ease', lineHeight: 1 };
+const grid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' };
+const card = { background: '#fff', border: '1px solid #e5e7eb', borderRadius: '16px', padding: '1.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', transition: 'all 0.2s', cursor: 'pointer' };
+const cardWarning = { borderColor: '#fed7aa', background: '#fffaf0' };
+const cardCompleted = { borderColor: '#9ae6b4', background: '#f0fff4' };
+const cardHeader = { display: 'flex', gap: '1rem', marginBottom: '1rem', alignItems: 'flex-start' };
+const cardIcon = { width: '50px', height: '50px', borderRadius: '12px', background: '#f7fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 };
+const cardTitle = { margin: '0 0 0.5rem', fontSize: '1.1rem', fontWeight: 600, color: '#2d3748', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' };
+const cardMeta = { fontSize: '0.8rem', color: '#718096', display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' };
+const cardDescription = { fontSize: '0.875rem', color: '#4a5568', lineHeight: 1.6, marginBottom: '1.25rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' };
+const cardActions = { display: 'flex', gap: '0.5rem', flexWrap: 'wrap' };
+const btnPrimary = { ...uploadBtn, padding: '0.625rem 1rem', fontSize: '0.85rem' };
+const btnSecondary = { background: '#f7fafc', color: '#4a5568', border: '2px solid #e2e8f0', padding: '0.625rem 1rem', borderRadius: '10px', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'all 0.2s' };
+const btnDanger = { background: '#fc8181', color: '#fff', border: 'none', padding: '0.625rem 0.875rem', borderRadius: '10px', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' };
+const btnDangerAlt = { background: '#c53030', color: '#fff', border: 'none', padding: '0.625rem 0.875rem', borderRadius: '10px', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' };
+const tabContainer = { display: 'flex', gap: '0.5rem', marginBottom: '2rem', padding: '0.5rem', background: '#f7fafc', borderRadius: '12px', border: '1px solid #e2e8f0' };
+const tabBtn = { flex: 1, padding: '0.75rem 1rem', background: 'transparent', color: '#4a5568', border: 'none', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', transition: 'all 0.2s' };
+const tabBtnActive = { background: '#fff', color: '#667eea', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', fontWeight: 600 };
+const navBtn = { background: '#f7fafc', color: '#4a5568', border: '2px solid #e2e8f0', borderRadius: '8px', width: '32px', height: '32px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', transition: 'all 0.2s' };
+const modalBackdrop = { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 5000 };
+const modal = { background: '#fff', width: '90vw', maxWidth: '1000px', maxHeight: '90vh', overflowY: 'auto', borderRadius: '16px', padding: '2rem', boxShadow: '0 10px 40px rgba(0,0,0,0.4)' };
+const closeBtn = { background: 'none', border: 'none', fontSize: '2rem', cursor: 'pointer', color: '#718096', transition: 'all 0.2s' };
 
-// Modern Badges
-const badgeWarning = { background: 'linear-gradient(135deg, rgba(254,245,231,0.9), rgba(254,215,170,0.8))', backdropFilter: 'blur(10px)', color: '#d68910', padding: '0.35rem 0.75rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700, border: '1px solid rgba(214,137,16,0.2)' };
-const badgeSuccess = { background: 'linear-gradient(135deg, rgba(198,246,213,0.9), rgba(154,230,180,0.8))', backdropFilter: 'blur(10px)', color: '#22543d', padding: '0.35rem 0.75rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700, border: '1px solid rgba(34,84,61,0.2)' };
+// Badges
+const badgeWarning = { background: '#fef5e7', color: '#d68910', padding: '0.25rem 0.5rem', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 600 };
+const badgeSuccess = { background: '#c6f6d5', color: '#22543d', padding: '0.25rem 0.5rem', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 600 };

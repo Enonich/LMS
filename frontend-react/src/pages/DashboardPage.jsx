@@ -91,14 +91,12 @@ export default function DashboardPage() {
 
   return (
     <div style={{ 
-      background:'rgba(255,255,255,0.85)', 
-      backdropFilter:'blur(30px) saturate(180%)',
-      borderRadius:'24px', 
+      background:'#ffffff', 
+      borderRadius:'16px', 
       padding:'2.5rem', 
-      boxShadow:'0 10px 40px rgba(0,0,0,0.12), 0 0 60px rgba(102,126,234,0.08), inset 0 0 0 1px rgba(255,255,255,0.3)', 
+      boxShadow:'0 2px 8px rgba(0,0,0,0.1)', 
       minHeight:'calc(100vh - 4rem)',
-      border:'1px solid rgba(255,255,255,0.3)',
-      animation:'fadeIn 0.6s ease'
+      border:'1px solid #e5e7eb'
     }}>
       <div style={styles.header}>
         <div style={{ flex: 1 }}>
@@ -313,15 +311,13 @@ const styles = {
   titleIcon: {
     width: '70px',
     height: '70px',
-    borderRadius: '20px',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+    borderRadius: '16px',
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 8px 20px rgba(102,126,234,0.4), 0 0 40px rgba(118,75,162,0.2), inset 0 2px 4px rgba(255,255,255,0.2)',
-    flexShrink: 0,
-    animation: 'float 3s ease-in-out infinite',
-    border: '2px solid rgba(255,255,255,0.2)'
+    boxShadow: '0 4px 12px rgba(102,126,234,0.3)',
+    flexShrink: 0
   },
   title: {
     fontSize: '2.5rem',
@@ -329,8 +325,7 @@ const styles = {
     margin: 0,
     color: '#1f2937',
     letterSpacing: '-0.03em',
-    lineHeight: 1.1,
-    textShadow: '0 2px 10px rgba(0,0,0,0.05)'
+    lineHeight: 1.1
   },
   subtitle: {
     fontSize: '1.15rem',
@@ -373,32 +368,26 @@ const styles = {
     marginBottom: '2rem'
   },
   statCard: {
-    background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(247,250,252,0.95) 100%)',
-    backdropFilter: 'blur(20px)',
+    background: '#ffffff',
     padding: '1.75rem',
-    borderRadius: '20px',
-    boxShadow: '0 4px 16px rgba(0,0,0,0.08), 0 0 40px rgba(102,126,234,0.05)',
-    border: '1px solid rgba(229,231,235,0.6)',
+    borderRadius: '16px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+    border: '1px solid #e5e7eb',
     display: 'flex',
     alignItems: 'center',
     gap: '1.5rem',
-    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-    cursor: 'default',
-    position: 'relative',
-    overflow: 'hidden'
+    transition: 'all 0.2s',
+    cursor: 'default'
   },
   statIcon: {
     width: '72px',
     height: '72px',
-    borderRadius: '18px',
-    background: 'linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%)',
-    backdropFilter: 'blur(10px)',
+    borderRadius: '16px',
+    background: '#f7fafc',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    flexShrink: 0,
-    boxShadow: '0 4px 12px rgba(102,126,234,0.15)',
-    transition: 'all 0.3s ease'
+    flexShrink: 0
   },
   statValue: {
     fontSize: '2.25rem',
@@ -543,14 +532,12 @@ const styles = {
     padding: '4rem 2rem'
   },
   sectionCard: {
-    background: 'rgba(255,255,255,0.9)',
-    backdropFilter: 'blur(20px)',
-    borderRadius: '20px',
-    boxShadow: '0 4px 16px rgba(0,0,0,0.08), 0 0 40px rgba(102,126,234,0.05)',
-    border: '1px solid rgba(229,231,235,0.6)',
+    background: '#ffffff',
+    borderRadius: '16px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+    border: '1px solid #e5e7eb',
     marginBottom: '2rem',
-    overflow: 'hidden',
-    transition: 'all 0.3s ease'
+    overflow: 'hidden'
   },
   sectionHeader: {
     padding: '1.5rem',
@@ -574,16 +561,13 @@ const styles = {
     padding: '1.5rem'
   },
   materialCard: {
-    background: 'rgba(255,255,255,0.95)',
-    backdropFilter: 'blur(10px)',
-    border: '1px solid rgba(229,231,235,0.6)',
-    borderRadius: '16px',
+    background: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '14px',
     padding: '1.5rem',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-    cursor: 'pointer',
-    position: 'relative',
-    overflow: 'hidden'
+    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+    transition: 'all 0.2s',
+    cursor: 'pointer'
   },
   materialHeader: {
     display: 'flex',
@@ -594,15 +578,12 @@ const styles = {
   materialIcon: {
     width: '48px',
     height: '48px',
-    borderRadius: '14px',
-    background: 'linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1))',
-    backdropFilter: 'blur(10px)',
+    borderRadius: '12px',
+    background: '#f7fafc',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    flexShrink: 0,
-    boxShadow: '0 2px 8px rgba(102,126,234,0.1)',
-    transition: 'all 0.3s ease'
+    flexShrink: 0
   },
   materialTitle: {
     margin: '0 0 0.25rem',

@@ -334,15 +334,13 @@ export default function QuizPage(){
 
 const styles = {
   container: {
-    background:'rgba(255,255,255,0.85)',
-    backdropFilter:'blur(30px) saturate(180%)',
-    borderRadius:'24px',
+    background:'#ffffff',
+    borderRadius:'16px',
     padding:'2rem',
-    boxShadow:'0 10px 40px rgba(0,0,0,0.12), 0 0 60px rgba(102,126,234,0.08), inset 0 0 0 1px rgba(255,255,255,0.3)',
+    boxShadow:'0 2px 8px rgba(0,0,0,0.1)',
     maxHeight:'calc(100vh - 3rem)',
     overflowY:'auto',
-    border:'1px solid rgba(255,255,255,0.3)',
-    animation:'fadeIn 0.6s ease'
+    border:'1px solid #e5e7eb'
   },
   header: {
     display:'flex',
@@ -353,14 +351,13 @@ const styles = {
     gap:'0.75rem'
   },
   title: {
-    fontSize:'2rem',
-    fontWeight:900,
+    fontSize:'1.75rem',
+    fontWeight:800,
     margin:0,
     color:'#1f2937',
     display:'flex',
     alignItems:'center',
-    letterSpacing:'-0.03em',
-    textShadow:'0 2px 10px rgba(0,0,0,0.05)'
+    letterSpacing:'-0.02em'
   },
   subtitle: {
     fontSize:'1rem',
@@ -370,66 +367,53 @@ const styles = {
     letterSpacing:'-0.01em'
   },
   historyBtn: {
-    padding:'0.875rem 1.75rem',
-    background:'rgba(247,250,252,0.9)',
-    backdropFilter:'blur(10px)',
-    border:'1px solid rgba(226,232,240,0.6)',
-    borderRadius:'14px',
+    padding:'0.75rem 1.5rem',
+    background:'#f7fafc',
+    border:'1px solid #e2e8f0',
+    borderRadius:'10px',
     cursor:'pointer',
-    fontSize:'0.95rem',
-    fontWeight:600,
+    fontSize:'0.9rem',
+    fontWeight:500,
     color:'#4a5568',
-    transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    transition:'all 0.2s',
     display:'flex',
-    alignItems:'center',
-    boxShadow:'0 2px 8px rgba(0,0,0,0.05)'
+    alignItems:'center'
   },
   statsGrid: {
     display:'grid',
-    gridTemplateColumns:'repeat(auto-fit, minmax(140px, 1fr))',
-    gap:'1rem',
-    marginBottom:'1.5rem'
+    gridTemplateColumns:'repeat(auto-fit, minmax(120px, 1fr))',
+    gap:'0.75rem',
+    marginBottom:'1rem'
   },
   statCard: {
-    background:'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
-    backgroundSize:'200% 200%',
-    padding:'1.25rem',
-    borderRadius:'18px',
+    background:'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    padding:'1rem',
+    borderRadius:'12px',
     textAlign:'center',
     color:'#fff',
-    boxShadow:'0 6px 20px rgba(102,126,234,0.4), 0 0 40px rgba(118,75,162,0.2), inset 0 2px 4px rgba(255,255,255,0.2)',
-    animation:'shimmer 3s ease-in-out infinite',
-    border:'1px solid rgba(255,255,255,0.2)',
-    transition:'all 0.3s ease'
+    boxShadow:'0 4px 15px rgba(102,126,234,0.3)'
   },
   statIcon: {
-    fontSize:'2rem',
-    marginBottom:'0.5rem',
-    filter:'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
+    fontSize:'1.5rem',
+    marginBottom:'0.25rem'
   },
   statValue: {
-    fontSize:'1.75rem',
-    fontWeight:800,
-    marginBottom:'0.25rem',
-    letterSpacing:'-0.02em',
-    textShadow:'0 2px 8px rgba(0,0,0,0.15)'
+    fontSize:'1.5rem',
+    fontWeight:700,
+    marginBottom:'0.15rem'
   },
   statLabel: {
-    fontSize:'0.9rem',
-    opacity:0.95,
-    fontWeight:500,
-    letterSpacing:'0.02em'
+    fontSize:'0.85rem',
+    opacity:0.9
   },
   questionCard: {
-    background:'rgba(255,255,255,0.95)',
-    backdropFilter:'blur(20px)',
-    border:'1px solid rgba(229,231,235,0.6)',
-    borderRadius:'20px',
-    padding:'2rem',
-    maxWidth:'850px',
+    background:'#fff',
+    border:'1px solid #e5e7eb',
+    borderRadius:'16px',
+    padding:'1.5rem',
+    maxWidth:'800px',
     margin:'0 auto',
-    boxShadow:'0 6px 20px rgba(0,0,0,0.08), 0 0 40px rgba(102,126,234,0.05)',
-    animation:'slideUp 0.5s ease'
+    boxShadow:'0 2px 8px rgba(0,0,0,0.05)'
   },
   questionHeader: {
     display:'flex',
@@ -440,17 +424,14 @@ const styles = {
     gap:'0.5rem'
   },
   questionBadge: {
-    background:'linear-gradient(135deg, rgba(102,126,234,0.15), rgba(118,75,162,0.15))',
-    backdropFilter:'blur(10px)',
+    background:'rgba(102,126,234,0.1)',
     color:'#667eea',
-    padding:'0.625rem 1.25rem',
-    borderRadius:'24px',
-    fontSize:'0.9rem',
-    fontWeight:700,
+    padding:'0.5rem 1rem',
+    borderRadius:'20px',
+    fontSize:'0.85rem',
+    fontWeight:600,
     display:'flex',
-    alignItems:'center',
-    border:'1px solid rgba(102,126,234,0.2)',
-    boxShadow:'0 2px 8px rgba(102,126,234,0.1)'
+    alignItems:'center'
   },
   questionType: {
     color:'#718096',
@@ -468,109 +449,89 @@ const styles = {
   optionsContainer: {
     display:'flex',
     flexDirection:'column',
-    gap:'0.75rem',
-    marginBottom:'1.5rem'
+    gap:'0.6rem',
+    marginBottom:'1rem'
   },
   optionBtn: {
     textAlign:'left',
-    padding:'1rem 1.25rem',
-    border:'2px solid rgba(226,232,240,0.6)',
-    borderRadius:'16px',
+    padding:'0.85rem 1rem',
+    border:'1px solid #e2e8f0',
+    borderRadius:'12px',
     cursor:'pointer',
-    fontSize:'1rem',
+    fontSize:'0.95rem',
     color:'#1f2937',
-    background:'rgba(255,255,255,0.95)',
-    backdropFilter:'blur(10px)',
-    transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    background:'#fff',
+    transition:'all 0.2s',
     display:'flex',
     alignItems:'center',
-    gap:'1rem',
-    fontWeight:600,
-    boxShadow:'0 2px 8px rgba(0,0,0,0.05)',
-    position:'relative',
-    overflow:'hidden'
+    gap:'0.75rem',
+    fontWeight:500
   },
   optionLetter: {
-    background:'linear-gradient(135deg, #667eea, #764ba2)',
+    background:'#667eea',
     color:'#fff',
-    width:'40px',
-    height:'40px',
+    width:'32px',
+    height:'32px',
     borderRadius:'50%',
     display:'flex',
     alignItems:'center',
     justifyContent:'center',
-    fontWeight:800,
-    fontSize:'1rem',
-    flexShrink:0,
-    boxShadow:'0 4px 12px rgba(102,126,234,0.3), inset 0 2px 4px rgba(255,255,255,0.2)',
-    border:'2px solid rgba(255,255,255,0.2)'
+    fontWeight:700,
+    fontSize:'0.9rem',
+    flexShrink:0
   },
   inputContainer: {
     marginBottom:'1.5rem'
   },
   textInput: {
     width:'100%',
-    padding:'1.125rem 1.25rem',
-    border:'2px solid rgba(226,232,240,0.6)',
-    borderRadius:'14px',
-    fontSize:'1.05rem',
+    padding:'1rem',
+    border:'2px solid #e2e8f0',
+    borderRadius:'12px',
+    fontSize:'1rem',
     outline:'none',
-    transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    transition:'border-color 0.2s',
     boxSizing:'border-box',
-    background:'rgba(247,250,252,0.7)',
-    backdropFilter:'blur(10px)',
-    fontWeight:500
+    background:'#fff'
   },
   submitBtn: {
     width:'100%',
-    background:'linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%)',
-    backgroundSize:'200% 200%',
+    background:'linear-gradient(135deg,#667eea,#764ba2)',
     color:'#fff',
     border:'none',
-    padding:'1.125rem',
-    borderRadius:'14px',
-    fontSize:'1.05rem',
-    fontWeight:700,
+    padding:'0.85rem',
+    borderRadius:'12px',
+    fontSize:'0.95rem',
+    fontWeight:600,
     cursor:'pointer',
-    transition:'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    transition:'all 0.2s',
     display:'flex',
     alignItems:'center',
     justifyContent:'center',
-    boxShadow:'0 6px 20px rgba(102,126,234,0.45), 0 0 40px rgba(118,75,162,0.25), inset 0 2px 4px rgba(255,255,255,0.2)',
-    animation:'shimmer 3s ease-in-out infinite',
-    letterSpacing:'0.03em',
-    border:'1px solid rgba(255,255,255,0.2)'
+    boxShadow:'0 4px 15px rgba(102,126,234,0.4)'
   },
   resultCard: {
-    background:'rgba(255,255,255,0.95)',
-    backdropFilter:'blur(20px)',
-    border:'1px solid rgba(229,231,235,0.6)',
-    borderRadius:'24px',
-    maxWidth:'850px',
+    background:'#fff',
+    border:'1px solid #e5e7eb',
+    borderRadius:'16px',
+    maxWidth:'800px',
     margin:'0 auto',
     overflow:'hidden',
-    boxShadow:'0 10px 40px rgba(0,0,0,0.15), 0 0 60px rgba(102,126,234,0.1)',
-    animation:'scaleIn 0.5s ease'
+    boxShadow:'0 4px 20px rgba(0,0,0,0.1)'
   },
   resultHeader: {
-    padding:'2rem',
+    padding:'1.5rem',
     textAlign:'center',
-    color:'#fff',
-    position:'relative',
-    overflow:'hidden'
+    color:'#fff'
   },
   resultIcon: {
-    fontSize:'4rem',
-    marginBottom:'0.75rem',
-    filter:'drop-shadow(0 4px 12px rgba(0,0,0,0.2))',
-    animation:'float 2s ease-in-out infinite'
+    fontSize:'3rem',
+    marginBottom:'0.5rem'
   },
   resultTitle: {
-    fontSize:'2rem',
-    fontWeight:900,
-    margin:'0 0 0.75rem',
-    letterSpacing:'-0.02em',
-    textShadow:'0 2px 12px rgba(0,0,0,0.2)'
+    fontSize:'1.5rem',
+    fontWeight:700,
+    margin:'0 0 0.5rem'
   },
   resultSubtitle: {
     fontSize:'1.1rem',
@@ -579,45 +540,40 @@ const styles = {
     fontWeight:500
   },
   explanation: {
-    padding:'1.75rem',
-    background:'rgba(247,250,252,0.8)',
-    backdropFilter:'blur(10px)'
+    padding:'1.25rem',
+    background:'#f7fafc'
   },
   explanationHeader: {
-    fontSize:'1.1rem',
-    fontWeight:700,
+    fontSize:'1rem',
+    fontWeight:600,
     color:'#2d3748',
-    marginBottom:'1rem',
+    marginBottom:'0.75rem',
     display:'flex',
-    alignItems:'center',
-    gap:'0.5rem'
+    alignItems:'center'
   },
   explanationText: {
-    fontSize:'1rem',
+    fontSize:'0.95rem',
     color:'#4a5568',
-    lineHeight:1.8,
-    fontWeight:500
+    lineHeight:1.7
   },
   resultActions: {
-    padding:'1.5rem 1.75rem'
+    padding:'1rem 1.25rem'
   },
   nextBtn: {
     width:'100%',
-    background:'linear-gradient(135deg,#48bb78 0%,#38a169 100%)',
+    background:'linear-gradient(135deg,#48bb78,#38a169)',
     color:'#fff',
     border:'none',
-    padding:'1.125rem',
-    borderRadius:'14px',
-    fontSize:'1.05rem',
-    fontWeight:700,
+    padding:'0.85rem',
+    borderRadius:'12px',
+    fontSize:'0.95rem',
+    fontWeight:600,
     cursor:'pointer',
-    transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    transition:'all 0.2s',
     display:'flex',
     alignItems:'center',
     justifyContent:'center',
-    boxShadow:'0 6px 20px rgba(72,187,120,0.45), 0 0 30px rgba(56,161,105,0.2), inset 0 2px 4px rgba(255,255,255,0.2)',
-    letterSpacing:'0.03em',
-    border:'1px solid rgba(255,255,255,0.2)'
+    boxShadow:'0 4px 15px rgba(72,187,120,0.4)'
   },
   loadingState: {
     textAlign:'center',
@@ -660,13 +616,11 @@ const styles = {
     overflowY:'auto'
   },
   historyItem: {
-    background:'rgba(255,255,255,0.95)',
-    backdropFilter:'blur(10px)',
-    border:'1px solid rgba(229,231,235,0.6)',
-    borderRadius:'16px',
-    padding:'1.25rem',
-    boxShadow:'0 4px 12px rgba(0,0,0,0.06)',
-    transition:'all 0.3s ease'
+    background:'#fff',
+    border:'1px solid #e5e7eb',
+    borderRadius:'12px',
+    padding:'1rem',
+    boxShadow:'0 2px 4px rgba(0,0,0,0.05)'
   },
   historyHeader: {
     display:'flex',

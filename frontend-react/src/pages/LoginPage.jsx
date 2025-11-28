@@ -127,40 +127,34 @@ const styles = {
     overflow:'hidden'
   },
   card: {
-    background:'rgba(255,255,255,0.95)', 
-    backdropFilter:'blur(30px) saturate(180%)',
+    background:'#ffffff', 
     padding:'2.5rem', 
-    borderRadius:'24px', 
+    borderRadius:'16px', 
     width:'100%',
     maxWidth:'450px', 
-    boxShadow:'0 25px 60px rgba(0,0,0,0.25), 0 0 80px rgba(102,126,234,0.15), inset 0 0 0 1px rgba(255,255,255,0.3)',
-    border:'1px solid rgba(255,255,255,0.4)',
-    animation:'scaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+    boxShadow:'0 4px 20px rgba(0,0,0,0.1)',
+    border:'1px solid #e5e7eb',
     position:'relative',
     zIndex:1
   },
   logoSection: {
     textAlign:'center',
-    marginBottom:'2rem',
-    animation:'slideDown 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
+    marginBottom:'2rem'
   },
   logo: {
     fontSize:'4rem',
     marginBottom:'0.5rem',
-    animation:'float 3s ease-in-out infinite',
-    display:'inline-block',
-    filter:'drop-shadow(0 8px 16px rgba(102,126,234,0.3))'
+    display:'inline-block'
   },
   brandName: {
     fontSize:'1.8rem',
     fontWeight:800,
     margin:'0.5rem 0 0.25rem',
-    background:'linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%)',
+    background:'linear-gradient(135deg,#667eea 0%,#764ba2 100%)',
     WebkitBackgroundClip:'text',
     WebkitTextFillColor:'transparent',
     backgroundClip:'text',
-    letterSpacing:'-0.02em',
-    textShadow:'0 2px 20px rgba(102,126,234,0.2)'
+    letterSpacing:'-0.02em'
   },
   tagline: {
     fontSize:'0.9rem',
@@ -191,8 +185,7 @@ const styles = {
     lineHeight:1.5
   },
   error: {
-    background:'linear-gradient(135deg, rgba(254, 215, 215, 0.9), rgba(252, 129, 129, 0.2))',
-    backdropFilter:'blur(10px)',
+    background:'#fed7d7',
     color:'#c53030',
     padding:'1rem 1.25rem',
     borderRadius:'12px',
@@ -201,9 +194,7 @@ const styles = {
     display:'flex',
     alignItems:'center',
     fontWeight:600,
-    border:'1px solid rgba(197, 48, 48, 0.2)',
-    boxShadow:'0 4px 12px rgba(197, 48, 48, 0.15)',
-    animation:'slideDown 0.4s ease'
+    border:'1px solid #fc8181'
   },
   formGroup: {
     marginBottom:'1rem'
@@ -227,12 +218,11 @@ const styles = {
     border:'2px solid #e2e8f0',
     borderRadius:'12px',
     fontSize:'0.95rem',
-    transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    transition:'all 0.2s',
     outline:'none',
     fontFamily:'inherit',
     boxSizing:'border-box',
-    background:'rgba(247,250,252,0.5)',
-    backdropFilter:'blur(10px)'
+    background:'#ffffff'
   },
   passwordContainer: {
     position:'relative'
@@ -256,21 +246,17 @@ const styles = {
     padding:'1rem',
     border:'none',
     borderRadius:'12px',
-    background:'linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%)',
-    backgroundSize:'200% 200%',
+    background:'linear-gradient(135deg,#667eea 0%,#764ba2 100%)',
     color:'#fff',
     fontWeight:700,
     fontSize:'1rem',
     cursor:'pointer',
-    transition:'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-    boxShadow:'0 8px 24px rgba(102,126,234,0.4), 0 0 40px rgba(118,75,162,0.2)',
+    transition:'all 0.2s',
+    boxShadow:'0 4px 12px rgba(102,126,234,0.3)',
     display:'flex',
     alignItems:'center',
     justifyContent:'center',
     fontFamily:'inherit',
-    position:'relative',
-    overflow:'hidden',
-    animation:'shimmer 3s ease-in-out infinite',
     letterSpacing:'0.03em'
   },
   footer: {
